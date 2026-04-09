@@ -608,6 +608,14 @@ All images (except logos) are **WebP** format for performance. Logos remain PNG.
 | project-turbomax-wide.webp | TurboMax system wide | TurboMax DHW project |
 | project-plate-heat-exchanger.webp | Blue plate heat exchanger | Heat exchanger project |
 
+### Hero Image Performance
+- All 8 hero images are **preloaded** in the root layout (`src/app/layout.tsx`) via `<link rel="preload" as="image">` tags in `<head>`. This ensures images are already in the browser cache during client-side navigation, eliminating flash/lag when switching pages.
+- Hero `<Image>` components use `unoptimized` prop to bypass Vercel's image optimization API (images are already WebP, no further optimization needed). This avoids latency from Vercel's on-demand optimization.
+- Hero images use `sizes="100vw"` and `priority` props.
+- `next.config.ts` sets `minimumCacheTTL: 31536000` (1 year) for Vercel CDN image caching.
+- **Do NOT use `placeholder="blur"` on hero images** — causes color flash issues on Vercel.
+- When adding a new hero image: add the file to `/public`, add a `<link rel="preload">` in `layout.tsx`, and use `unoptimized` on the `<Image>` component.
+
 ### Image Rules
 - Use `object-cover` with contextual `objectPosition` via inline style to keep subjects visible
 - "Why Choose Us" plumber image: `objectPosition: "center 60%"` to center the subject
