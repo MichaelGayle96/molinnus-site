@@ -220,6 +220,7 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
         image={heroImage}
         imagePosition={heroPosition}
         compact
+        showBadges
         stats={highlights.map((h) => ({ value: h.value, label: h.title }))}
       />
 

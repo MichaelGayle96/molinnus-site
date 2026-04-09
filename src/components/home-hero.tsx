@@ -48,7 +48,7 @@ export function HomeHero() {
     <>
     <section
       ref={sectionRef}
-      className="relative flex flex-col justify-end overflow-hidden transition-all duration-400 min-h-[70vh] sm:min-h-[90vh]"
+      className="relative flex flex-col justify-end overflow-hidden transition-all duration-400 min-h-[70vh] sm:min-h-[85vh]"
       style={contactOpen && panelHeight > 0 ? { minHeight: `${panelHeight + 88 + 24}px` } : undefined}
     >
       <Image
@@ -60,7 +60,7 @@ export function HomeHero() {
         priority
       />
       {/* Dark base overlay */}
-      <div className="absolute inset-0 bg-black/45 sm:bg-black/70" />
+      <div className="absolute inset-0 bg-black/60" />
       {/* Gold cinematic tint */}
       <div className="absolute inset-0 bg-amber-900/15 mix-blend-multiply" />
       {/* Directional gradients for text readability */}
@@ -77,15 +77,21 @@ export function HomeHero() {
       />
 
       {/* Copy bottom-left */}
-      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-[45px] md:pb-16">
+      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-[50px] md:pb-[4.4rem]">
+        <div className="hidden sm:flex items-center gap-3 absolute bottom-[50px] md:bottom-[4.4rem] right-6 lg:right-10 z-[5]">
+          <div className="w-[4.5rem] h-[4.5rem] rounded-[10px] bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center gap-1.5" title="TSSA Licensed">
+            <ShieldCheck className="h-6 w-6 text-gold-500" />
+            <span className="text-[0.65rem] font-bold text-white/80 tracking-wide">TSSA</span>
+          </div>
+          <div className="w-[4.5rem] h-[4.5rem] rounded-[10px] bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center gap-1.5" title="Fulton Recommended Installer">
+            <Award className="h-6 w-6 text-gold-500" />
+            <span className="text-[0.65rem] font-bold text-white/80 tracking-wide">Fulton</span>
+          </div>
+        </div>
         <div className="max-w-2xl">
-          <p className="text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase mb-3 sm:mb-4 hidden sm:block">
-            TSSA Licensed &middot; Fulton Recommended Installer
-          </p>
-          <h1 className="text-white text-[2.5rem] sm:text-[2.875rem] md:text-[3.625rem] lg:text-[4.125rem] font-bold leading-[1.08] tracking-tight">
+          <h1 className="text-white text-[2.5rem] sm:text-[2.875rem] md:text-[3.08rem] lg:text-[3.5rem] font-bold leading-[1.08] tracking-tight">
             Ontario&rsquo;s Commercial{" "}
-            <span className="text-gold-500">Plumbing & Heating</span>{" "}
-            Experts
+            <span className="text-gold-500 sm:whitespace-nowrap">Plumbing & Heating Experts</span>
           </h1>
           <p className="mt-5 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed hidden sm:block">
             Specializing in hydronic heating, steam boiler systems, and
@@ -95,7 +101,7 @@ export function HomeHero() {
           </p>
           <div className="mt-6 sm:mt-8 flex flex-row flex-wrap items-center gap-3">
             <button
-              onClick={() => setContactOpen(true)}
+              onClick={() => { if (window.innerWidth < 640) { window.location.href = "/contact#quote-form"; } else { setContactOpen(true); } }}
               className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-5 sm:px-7 py-3.5 rounded-full transition-colors cursor-pointer sm:w-auto"
             >
               Get a Free Quote

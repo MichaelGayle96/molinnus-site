@@ -277,11 +277,11 @@ export function ServicesPageContent() {
           >
           <div className="relative grid lg:grid-cols-[1.15fr_1fr] gap-8 items-stretch">
             {/* Left — Active content + tab list below (hidden on mobile when form shows) */}
-            <div className={cn("flex flex-col justify-between", showQuoteForm && "hidden lg:flex lg:invisible")}>
+            <div className={cn("flex flex-col justify-between", showQuoteForm && "hidden lg:flex")}>
               {/* Active service content — hidden on desktop when form shows */}
               <div
                 ref={contentRef}
-                className={cn("relative overflow-hidden", showQuoteForm && "lg:invisible")}
+                className="relative overflow-hidden"
                 style={isDesktop && contentHeight > 0 ? { height: contentHeight } : undefined}
               >
                 {SERVICES.map((service, i) => {

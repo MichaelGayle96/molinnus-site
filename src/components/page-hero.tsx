@@ -39,7 +39,7 @@ export function PageHero({
   showCtas = true,
   showBadges = false,
   fullHeight = false,
-  ctaHref = "/contact",
+  ctaHref = "/contact#quote-form",
 }: PageHeroProps) {
   return (
     <>
@@ -59,9 +59,9 @@ export function PageHero({
               style={{ objectPosition: imagePosition }}
               priority
             />
-            <div className="absolute inset-0 bg-black/[0.65] md:bg-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             {cinematic && (
               <>
                 <div className="absolute inset-0 bg-black/20" />
@@ -83,6 +83,18 @@ export function PageHero({
 
         {/* Bottom — Copy + CTAs */}
         <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-10 md:pb-14">
+          {showBadges && (
+            <div className="hidden sm:flex items-center gap-3 absolute bottom-10 md:bottom-14 right-6 lg:right-10 z-[5]">
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[10px] bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center gap-1.5" title="TSSA Licensed">
+                <ShieldCheck className="h-6 w-6 text-gold-500" />
+                <span className="text-[0.65rem] font-bold text-white/80 tracking-wide">TSSA</span>
+              </div>
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[10px] bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center gap-1.5" title="Fulton Recommended Installer">
+                <Award className="h-6 w-6 text-gold-500" />
+                <span className="text-[0.65rem] font-bold text-white/80 tracking-wide">Fulton</span>
+              </div>
+            </div>
+          )}
           <div className="max-w-xl">
             {label && (
               <span className="inline-block text-xs font-semibold uppercase tracking-[0.2em] text-gold-500 mb-4">
@@ -112,8 +124,15 @@ export function PageHero({
               <>
                 <div className="mt-6 flex flex-row flex-wrap items-center gap-3">
                   <Link
+                    href="/contact#quote-form"
+                    className="inline-flex sm:hidden items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-5 py-3 rounded-full transition-colors"
+                  >
+                    Get a Free Quote
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
                     href={ctaHref}
-                    className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-5 sm:px-6 py-3 rounded-full transition-colors sm:w-auto"
+                    className="hidden sm:inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm sm:px-6 py-3 rounded-full transition-colors sm:w-auto"
                   >
                     Get a Free Quote
                     <ArrowRight className="h-4 w-4" />

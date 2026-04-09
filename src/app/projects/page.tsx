@@ -27,6 +27,7 @@ export default function ProjectsPage() {
         description="From high-rise boiler replacements to commercial re-piping, explore the work that has earned us the trust of property managers across Ontario."
         image="/steam-boiler-hero.webp"
         imagePosition="center right"
+        showBadges
         stats={[
           { value: "500+", label: "Projects Completed" },
           { value: "4", label: "Regions Served" },
