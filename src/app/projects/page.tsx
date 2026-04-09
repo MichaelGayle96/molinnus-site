@@ -102,17 +102,17 @@ export default function ProjectsPage() {
             emergency repair, we&rsquo;re ready to deliver the same quality
             you see in our portfolio.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4 justify-center">
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
             >
-              Get Started
+              Get a Quote
               <ArrowUpRight className="h-4 w-4" />
             </Link>
             <a
               href={SITE.phoneTel}
-              className="inline-flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
             >
               <Phone className="h-4 w-4" />
               {SITE.phone}

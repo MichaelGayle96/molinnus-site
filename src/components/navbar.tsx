@@ -211,50 +211,40 @@ export function Navbar() {
                     window.location.href = "/contact";
                   }
                 }}
-                className={cn(
-                  "inline-flex items-center gap-2 text-[0.8rem] font-medium px-5 py-2 rounded-full border transition-all cursor-pointer",
-                  scrolled
-                    ? "border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white"
-                    : "border-white/60 text-white hover:bg-white hover:text-brand-900"
-                )}
+                className="inline-flex items-center gap-2 text-[0.8rem] font-semibold px-5 py-2 rounded-full bg-gold-500 text-brand-950 hover:bg-gold-400 transition-colors cursor-pointer"
               >
-                Contact Us
+                Get a Quote
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             ) : pathname === "/contact" ? (
               <a
                 href="#quote-form"
-                className={cn(
-                  "inline-flex items-center gap-2 text-[0.8rem] font-medium px-5 py-2 rounded-full border transition-all",
-                  scrolled
-                    ? "border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white"
-                    : "border-white/60 text-white hover:bg-white hover:text-brand-900"
-                )}
+                className="inline-flex items-center gap-2 text-[0.8rem] font-semibold px-5 py-2 rounded-full bg-gold-500 text-brand-950 hover:bg-gold-400 transition-colors"
               >
-                Contact Us
+                Get a Quote
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
             ) : (
               <Link
                 href="/contact#quote-form"
-                className={cn(
-                  "inline-flex items-center gap-2 text-[0.8rem] font-medium px-5 py-2 rounded-full border transition-all",
-                  scrolled
-                    ? "border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white"
-                    : "border-white/60 text-white hover:bg-white hover:text-brand-900"
-                )}
+                className="inline-flex items-center gap-2 text-[0.8rem] font-semibold px-5 py-2 rounded-full bg-gold-500 text-brand-950 hover:bg-gold-400 transition-colors"
               >
-                Contact Us
+                Get a Quote
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 text-[0.8rem] font-semibold px-5 py-2 rounded-full bg-gold-500 text-brand-950 hover:bg-gold-400 transition-colors"
+            <a
+              href={SITE.phoneTel}
+              className={cn(
+                "inline-flex items-center gap-2 text-[0.8rem] font-medium px-5 py-2 rounded-full border transition-all",
+                scrolled
+                  ? "border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white"
+                  : "border-white/60 text-white hover:bg-white hover:text-brand-900"
+              )}
             >
-              Schedule a Call
               <Phone className="h-3.5 w-3.5" />
-            </Link>
+              {SITE.phone}
+            </a>
           </div>
 
           {/* Mobile toggle */}
@@ -358,10 +348,10 @@ export function Navbar() {
           </nav>
           <div className="px-6 pb-6 pt-2 border-t border-brand-100 space-y-3">
             <Link
-              href="/contact"
-              className="flex items-center justify-center gap-2 w-full rounded-full bg-brand-900 text-white text-sm font-semibold h-11 hover:bg-brand-800 transition-colors"
+              href="/contact#quote-form"
+              className="flex items-center justify-center gap-2 w-full rounded-full bg-gold-500 text-brand-950 text-sm font-semibold h-11 hover:bg-gold-400 transition-colors"
             >
-              Contact Us
+              Get a Quote
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <a

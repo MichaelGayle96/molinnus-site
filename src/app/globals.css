@@ -171,4 +171,19 @@
   }
 }
 
+@keyframes marquee-mobile {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+.animate-marquee-mobile {
+  animation: marquee-mobile 20s linear infinite;
+}
+
+@media (min-width: 640px) {
+  .animate-marquee-mobile {
+    animation: none;
+  }
+}
+
 

@@ -46,7 +46,7 @@ export function ServicesAccordion() {
   }, [activeIndex]);
 
   return (
-    <section className="bg-brand-900 py-20 md:py-28 lg:py-32">
+    <section className="bg-brand-900 pt-20 pb-10 md:py-24 lg:py-27">
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
         <div className="grid lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-20">
           {/* ─── Left column ─────────────────────────────── */}

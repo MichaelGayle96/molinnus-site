@@ -127,7 +127,7 @@ export default function HomePage() {
             <ScrollReveal
               key={region}
               variants={staggerItem}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-brand-200 bg-white py-5 px-4 text-sm font-medium text-brand-700 hover:border-gold-400 hover:bg-gold-50 transition-colors w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(20%-13px)]"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-brand-200 bg-white py-5 px-4 text-sm font-medium text-brand-700 hover:border-gold-400 hover:bg-gold-50 transition-colors w-full sm:w-[calc(33.333%-11px)] md:w-[calc(20%-13px)]"
             >
               <MapPin className="h-4 w-4 text-gold-500 shrink-0" />
               {region}

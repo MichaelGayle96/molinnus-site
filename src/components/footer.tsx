@@ -18,21 +18,21 @@ export function Footer() {
               24-hour emergency service available. Call now or request a quote.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 text-brand-950 px-7 py-3.5 font-semibold text-sm hover:bg-gold-400 transition-colors w-full sm:w-auto"
+            >
+              Get a Quote
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
             <a
               href={SITE.phoneTel}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 text-brand-950 px-7 py-3.5 font-semibold text-sm hover:bg-gold-400 transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 text-white px-7 py-3.5 font-semibold text-sm hover:bg-white/10 transition-colors w-full sm:w-auto"
             >
               <Phone className="h-4 w-4" />
               {SITE.phone}
             </a>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 text-white px-7 py-3.5 font-semibold text-sm hover:bg-white/10 transition-colors"
-            >
-              Request a Quote
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
           </div>
         </div>
       </div>

@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Award,
   ShieldCheck,
   Users,
   Clock,
-  ArrowUpRight,
-  Phone,
   GraduationCap,
   HardHat,
   Flame,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Section, SectionHeader } from "@/components/section";
 import { Timeline } from "@/components/timeline";
@@ -242,30 +237,6 @@ export default function AboutPage() {
             })}
           </div>
 
-          <Separator className="my-14 bg-white/10 max-w-4xl mx-auto" />
-
-          <div className="text-center">
-            <h3 className="text-white">Ready to Work With Us?</h3>
-            <p className="mt-3 text-white/50">
-              Get in touch for a free quote or to discuss your project.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3 justify-center">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors"
-              >
-                Contact Us
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
-              <a
-                href={SITE.phoneTel}
-                className="inline-flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
-              >
-                <Phone className="h-4 w-4" />
-                {SITE.phone}
-              </a>
-            </div>
-          </div>
         </div>
       </section>
     </>

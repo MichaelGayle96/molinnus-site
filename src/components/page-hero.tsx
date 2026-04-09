@@ -41,7 +41,7 @@ export function PageHero({
     <>
       <section
         className={`relative flex flex-col justify-end overflow-hidden ${
-          fullHeight ? "min-h-screen" : compact ? "min-h-[55vh]" : "min-h-[75vh]"
+          fullHeight ? "min-h-screen" : compact ? "min-h-[65vh] md:min-h-[55vh]" : "min-h-[75vh]"
         }`}
       >
         {/* Background image — full bleed */}
@@ -55,7 +55,7 @@ export function PageHero({
               style={{ objectPosition: imagePosition }}
               priority
             />
-            <div className="absolute inset-0 bg-black/50 md:bg-transparent" />
+            <div className="absolute inset-0 bg-black/[0.65] md:bg-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
             {cinematic && (
@@ -97,14 +97,14 @@ export function PageHero({
               <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
                 <Link
                   href={ctaHref}
-                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
                 >
                   Get a Free Quote
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <a
                   href={SITE.phoneTel}
-                  className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-6 py-3 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
                 >
                   <Phone className="h-4 w-4" />
                   {SITE.phone}
@@ -117,17 +117,34 @@ export function PageHero({
 
       {/* Stats bar — partner scroll style */}
       {stats && stats.length > 0 && (
-        <div className="border-b border-brand-200 overflow-x-auto">
-          <div className="flex items-center justify-center gap-4 sm:gap-8 py-4 px-4 min-w-max sm:min-w-0">
+        <div className="border-b border-brand-200 overflow-hidden">
+          {/* Desktop — original static layout */}
+          <div className="hidden sm:flex items-center justify-center gap-8 py-4 px-4">
             {stats.map((stat, i) => {
               const Icon = STAT_ICONS[i % STAT_ICONS.length];
               return (
-                <div key={stat.label} className="flex items-center gap-1.5 sm:gap-2">
-                  <Icon className="h-3.5 w-3.5 text-brand-400 shrink-0 hidden sm:block" />
-                  <span className="text-xs sm:text-sm font-semibold text-brand-500">
+                <div key={stat.label} className="flex items-center gap-2">
+                  <Icon className="h-3.5 w-3.5 text-brand-400 shrink-0" />
+                  <span className="text-sm font-semibold text-brand-500">
                     {stat.value}
                   </span>
-                  <span className="text-[0.65rem] sm:text-xs text-brand-400 font-medium uppercase tracking-wider">
+                  <span className="text-xs text-brand-400 font-medium uppercase tracking-wider">
+                    {stat.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {/* Mobile — marquee */}
+          <div className="flex sm:hidden items-center gap-6 py-4 px-4 animate-marquee-mobile whitespace-nowrap">
+            {[...stats, ...stats, ...stats].map((stat, i) => {
+              const Icon = STAT_ICONS[i % STAT_ICONS.length];
+              return (
+                <div key={`${stat.label}-${i}`} className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-xs font-semibold text-brand-500">
+                    {stat.value}
+                  </span>
+                  <span className="text-[0.65rem] text-brand-400 font-medium uppercase tracking-wider">
                     {stat.label}
                   </span>
                 </div>

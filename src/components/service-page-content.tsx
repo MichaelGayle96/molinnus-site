@@ -260,17 +260,17 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
                 })}
               </ul>
 
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
                 <button
                   onClick={() => setShowQuoteForm(true)}
-                  className="inline-flex items-center gap-2 bg-brand-900 hover:bg-brand-800 text-white font-semibold text-sm px-7 py-3.5 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 bg-brand-900 hover:bg-brand-800 text-white font-semibold text-sm px-7 py-3.5 rounded-full transition-colors cursor-pointer w-full sm:w-auto"
                 >
                   Request a Quote
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <a
                   href={SITE.phoneTel}
-                  className="inline-flex items-center gap-2 border border-brand-200 text-brand-700 hover:bg-brand-50 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-brand-200 text-brand-700 hover:bg-brand-50 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
                 >
                   <Phone className="h-4 w-4" />
                   {SITE.phone}
@@ -412,17 +412,17 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
                   {" "}{SERVICE_CTA_COPY[slug]?.subline || "backed by 20+ years of hands-on expertise and a spotless safety record."}
                 </span>
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <Link
                   href="/contact#contact-form"
-                  className="inline-flex items-center gap-2 bg-brand-900 hover:bg-brand-800 hover:shadow-[0_0_12px_rgba(255,215,3,0.3)] text-white font-semibold text-sm px-7 py-3.5 rounded-full transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-brand-900 hover:bg-brand-800 hover:shadow-[0_0_12px_rgba(255,215,3,0.3)] text-white font-semibold text-sm px-7 py-3.5 rounded-full transition-all w-full sm:w-auto"
                 >
                   Get a Free Quote
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
                 <a
                   href={SITE.phoneTel}
-                  className="inline-flex items-center gap-2 border border-brand-200 text-brand-700 hover:bg-brand-100 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-brand-200 text-brand-700 hover:bg-brand-100 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
                 >
                   <Phone className="h-4 w-4" />
                   {SITE.phone}
@@ -496,17 +496,17 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
             Get in touch for a free quote on your {service.shortTitle.toLowerCase()} project
             or schedule a consultation with our experts.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4 justify-center">
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
             >
-              Schedule a Call
+              Get a Quote
               <ArrowUpRight className="h-4 w-4" />
             </Link>
             <a
               href={SITE.phoneTel}
-              className="inline-flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
             >
               <Phone className="h-4 w-4" />
               {SITE.phone}

@@ -72,17 +72,17 @@ export function FeaturedProject() {
                 ))}
               </ul>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <button
                   onClick={() => setShowQuoteForm(true)}
-                  className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors cursor-pointer w-full sm:w-auto"
                 >
                   Request a Quote
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </button>
                 <a
                   href={SITE.phoneTel}
-                  className="inline-flex items-center gap-2 border border-white/15 text-white/70 hover:text-white hover:bg-white/5 font-medium text-sm px-6 py-3 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-white/15 text-white/70 hover:text-white hover:bg-white/5 font-medium text-sm px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
                 >
                   <Phone className="h-4 w-4" />
                   {SITE.phone}

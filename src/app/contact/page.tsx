@@ -69,11 +69,11 @@ export default function ContactPage() {
         ]}
       />
 
-      <Section className="!pt-14 md:!pt-18">
-        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
+      <Section className="!pt-14 md:!pt-18 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
           {/* ─── Form ──────────────────────────────────────── */}
-          <div className="lg:col-span-3">
-            <div id="quote-form" className="bg-white rounded-2xl border border-brand-200 p-8 md:p-10 scroll-mt-24">
+          <div className="lg:col-span-3 min-w-0">
+            <div id="quote-form" className="bg-white rounded-2xl border border-brand-200 p-5 sm:p-8 md:p-10 scroll-mt-24">
               <h2 className="text-2xl font-bold text-brand-950 mb-2">
                 Request a Free Quote
               </h2>
@@ -87,7 +87,7 @@ export default function ContactPage() {
           </div>
 
           {/* ─── Contact Info Sidebar ──────────────────────── */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-5 min-w-0">
             {CONTACT_INFO.map((item) => {
               const inner = (
                 <div className="flex gap-4">
@@ -188,7 +188,7 @@ export default function ContactPage() {
             {SITE.regions.map((region) => (
               <div
                 key={region}
-                className="flex items-center justify-center gap-2 rounded-2xl bg-white border border-brand-200 py-4 px-5 text-sm font-medium text-brand-700 hover:border-gold-400 hover:bg-gold-50 transition-colors whitespace-nowrap w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(20%-13px)]"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-white border border-brand-200 py-4 px-5 text-sm font-medium text-brand-700 hover:border-gold-400 hover:bg-gold-50 transition-colors w-full sm:w-[calc(33.333%-11px)] md:w-[calc(20%-13px)]"
               >
                 <CheckCircle2 className="h-4 w-4 text-gold-500 shrink-0" />
                 {region}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Phone, ArrowRight, ArrowUpRight, X, Mail, MapPin, Clock, ShieldCheck, Award, Building2, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SITE, IMAGES, SERVICES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useFormValidation } from "@/lib/use-form-validation";
@@ -19,6 +19,9 @@ const STATS = [
 
 export function HomeHero() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [panelHeight, setPanelHeight] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { errors, validate, clearError, trackField, showButton, submitting, submitted, reset } = useFormValidation();
 
   // Listen for custom event from navbar
@@ -28,12 +31,26 @@ export function HomeHero() {
     return () => window.removeEventListener("open-contact-panel", handler);
   }, []);
 
+  // Measure panel height when open
+  useEffect(() => {
+    if (contactOpen && panelRef.current) {
+      const measure = () => setPanelHeight(panelRef.current?.offsetHeight ?? 0);
+      measure();
+      const ro = new ResizeObserver(measure);
+      ro.observe(panelRef.current);
+      return () => ro.disconnect();
+    } else {
+      setPanelHeight(0);
+    }
+  }, [contactOpen, submitted]);
+
   return (
     <>
-    <section className={cn(
-      "relative flex flex-col justify-end overflow-hidden transition-all duration-400",
-      contactOpen && Object.keys(errors).length > 0 ? "min-h-[95vh]" : "min-h-[90vh]"
-    )}>
+    <section
+      ref={sectionRef}
+      className="relative flex flex-col justify-end overflow-hidden transition-all duration-400 min-h-[90vh]"
+      style={contactOpen && panelHeight > 0 ? { minHeight: `${panelHeight + 88 + 24}px` } : undefined}
+    >
       <Image
         src="/hero4.webp"
         alt="Commercial boiler room installation by Molinnus Plumbing & Heating"
@@ -43,7 +60,7 @@ export function HomeHero() {
         priority
       />
       {/* Dark base overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/70" />
       {/* Gold cinematic tint */}
       <div className="absolute inset-0 bg-amber-900/15 mix-blend-multiply" />
       {/* Directional gradients for text readability */}
@@ -60,12 +77,12 @@ export function HomeHero() {
       />
 
       {/* Copy bottom-left */}
-      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-20 md:pb-28">
+      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-10 md:pb-16">
         <div className="max-w-2xl">
           <p className="text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             TSSA Licensed &middot; Fulton Recommended Installer
           </p>
-          <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.08] tracking-tight">
+          <h1 className="text-white text-[2.5rem] sm:text-[2.875rem] md:text-[3.625rem] lg:text-[4.125rem] font-bold leading-[1.08] tracking-tight">
             Ontario&rsquo;s Commercial{" "}
             <span className="text-gold-500">Plumbing & Heating</span>{" "}
             Experts
@@ -76,17 +93,17 @@ export function HomeHero() {
             property managers across Durham, the GTA, and Peterborough for
             over 20 years.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
             <button
               onClick={() => setContactOpen(true)}
-              className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors cursor-pointer w-full sm:w-auto"
             >
               Get a Free Quote
               <ArrowRight className="h-4 w-4" />
             </button>
             <a
               href={SITE.phoneTel}
-              className="inline-flex items-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
             >
               <Phone className="h-4 w-4" />
               {SITE.phone}
@@ -95,7 +112,7 @@ export function HomeHero() {
         </div>
       </div>
 
-      {/* Contact panel - fades in place, aligned to content width */}
+      {/* Contact panel - overlays content, hero grows on mobile to fit */}
       <div
         className={cn(
           "absolute inset-x-0 top-[88px] z-20 transition-all duration-400 pointer-events-none",
@@ -105,7 +122,7 @@ export function HomeHero() {
         )}
       >
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10 flex justify-center lg:justify-end">
-        <div className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[440px] bg-white/95 backdrop-blur-sm rounded-[10px] shadow-2xl flex flex-col pointer-events-auto">
+        <div ref={panelRef} className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[440px] bg-white/95 backdrop-blur-sm rounded-[10px] shadow-2xl flex flex-col pointer-events-auto">
           {/* Close button — top right */}
           <button
             onClick={() => setContactOpen(false)}
@@ -240,26 +257,45 @@ export function HomeHero() {
     </section>
 
     {/* Stats bar below hero */}
-    <div className="border-b border-brand-200 overflow-x-auto">
-      <div className="flex items-center justify-center gap-4 sm:gap-8 py-4 px-4 min-w-max sm:min-w-0">
-        {[
-          { value: "20+", label: "Years Experience", icon: Building2 },
-          { value: "100%", label: "TSSA Approved", icon: ShieldCheck },
-          { value: "24/7", label: "Emergency Service", icon: Clock },
-          { value: "500+", label: "Projects", icon: Award },
-        ].map((stat) => (
-          <div key={stat.label} className="flex items-center gap-1.5 sm:gap-2">
-            <stat.icon className="h-3.5 w-3.5 text-brand-400 shrink-0 hidden sm:block" />
-            <span className="text-xs sm:text-sm font-semibold text-brand-500">
-              {stat.value}
-            </span>
-            <span className="text-[0.65rem] sm:text-xs text-brand-400 font-medium uppercase tracking-wider">
-              {stat.label}
-            </span>
+    {(() => {
+      const stats = [
+        { value: "20+", label: "Years Experience", icon: Building2 },
+        { value: "100%", label: "TSSA Approved", icon: ShieldCheck },
+        { value: "24/7", label: "Emergency Service", icon: Clock },
+        { value: "500+", label: "Projects", icon: Award },
+      ];
+      return (
+        <div className="border-b border-brand-200 overflow-hidden">
+          {/* Desktop — original static layout */}
+          <div className="hidden sm:flex items-center justify-center gap-8 py-4 px-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex items-center gap-2">
+                <stat.icon className="h-3.5 w-3.5 text-brand-400 shrink-0" />
+                <span className="text-sm font-semibold text-brand-500">
+                  {stat.value}
+                </span>
+                <span className="text-xs text-brand-400 font-medium uppercase tracking-wider">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+          {/* Mobile — marquee */}
+          <div className="flex sm:hidden items-center gap-6 py-4 px-4 animate-marquee-mobile whitespace-nowrap">
+            {[...stats, ...stats, ...stats].map((stat, i) => (
+              <div key={`${stat.label}-${i}`} className="flex items-center gap-1.5 shrink-0">
+                <span className="text-xs font-semibold text-brand-500">
+                  {stat.value}
+                </span>
+                <span className="text-[0.65rem] text-brand-400 font-medium uppercase tracking-wider">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    })()}
     </>
   );
 }
