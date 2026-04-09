@@ -60,6 +60,7 @@ export function PageHero({
               className="object-cover"
               style={{ objectPosition: imagePosition }}
               priority
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/60" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />

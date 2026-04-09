@@ -59,6 +59,7 @@ export function HomeHero() {
         className="object-cover"
         style={{ objectPosition: "85% 100%" }}
         priority
+        unoptimized
       />
       {/* Dark base overlay */}
       <div className="absolute inset-0 bg-black/60" />
