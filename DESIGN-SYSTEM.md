@@ -54,7 +54,7 @@
 ### Heading Scale
 | Level | Mobile | Tablet | Desktop | Weight | Line Height |
 |-------|--------|--------|---------|--------|-------------|
-| h1 (home hero) | text-[2.5rem] (mobile) | text-[2.875rem]/text-[3.625rem] | text-[4.125rem] | font-bold | 1.08 |
+| h1 (home hero) | text-[2.5rem] (mobile) | text-[2.875rem]/text-[3.08rem] | text-[3.5rem] | font-bold | 1.08 |
 | h1 (subpages) | text-3xl | text-4xl | text-[2.75rem] | font-bold | 1.1 |
 | h2 | text-2xl/text-3xl | text-3xl/text-4xl | text-[2.75rem] | font-bold | 1.1 |
 | h3 | text-xl | text-2xl | — | font-semibold | 1.2 |
@@ -174,19 +174,24 @@ All headings: `letter-spacing: -0.025em`, `text-wrap: balance`
   - On home page, scrolled past hero: navigates to `/contact`
   - On contact page: anchor scrolls to `#quote-form`
   - On all other pages: navigates to `/contact#quote-form`
+- **"Get a Free Quote" hero CTA behavior (mobile)**:
+  - On home page: navigates to `/contact#quote-form` (checked via `window.innerWidth < 640`)
+  - On all other pages: navigates to `/contact#quote-form` (separate mobile-only Link, `sm:hidden`)
+  - Desktop hero CTAs unchanged — default `ctaHref` is `/contact#quote-form`
 
 ### Hero Sections
-- Homepage: `min-h-[70vh] sm:min-h-[90vh]` (shorter on mobile; dynamically expands when contact panel is open, measured via ResizeObserver), image `object-cover`, `objectPosition: "85% 100%"`
-- Homepage cinematic overlay: dark base (`bg-black/45 sm:bg-black/70` — lighter on mobile to let image show through), gold tint (`bg-amber-900/15 mix-blend-multiply`), gradients (`from-black/40`, `from-black/50`), film grain (SVG noise at `opacity-[0.08]`)
-- Homepage hero copy positioned closer to bottom: `pb-[45px] md:pb-16`
+- Homepage: `min-h-[70vh] sm:min-h-[85vh]` (shorter on mobile; dynamically expands when contact panel is open, measured via ResizeObserver), image `object-cover`, `objectPosition: "85% 100%"`
+- Homepage cinematic overlay: dark base (`bg-black/60`), gold tint (`bg-amber-900/15 mix-blend-multiply`), gradients (`from-black/40`, `from-black/50`), film grain (SVG noise at `opacity-[0.08]`)
+- Homepage hero copy positioned closer to bottom: `pb-[50px] md:pb-[4.4rem]`
+- Homepage hero h1: "Plumbing & Heating Experts" forced to one line on desktop via `sm:whitespace-nowrap`, wraps naturally on mobile
 - Homepage mobile hero: description paragraph hidden (`hidden sm:block`), accent label rendered as frosted glass badge (`bg-white/10 backdrop-blur-sm rounded-full text-[0.6rem]`) instead of plain text
 - Homepage mobile trust badges: TSSA + Fulton icon+text pills (`h-9 px-3 rounded-full bg-white/10 backdrop-blur-sm`) below CTAs with `mt-5` spacing, `sm:hidden`
+- **Desktop trust badges (home hero)**: TSSA + Fulton square badges (`w-[4.5rem] h-[4.5rem] rounded-[10px] bg-white/10 backdrop-blur-sm`) positioned bottom-right via absolute positioning within the `max-w-[1400px]` container. Icons `h-6 w-6`, text `text-[0.65rem]`. `hidden sm:flex`.
 - Subpages: `min-h-[75vh]`, fallback bg `bg-brand-900` (not brand-950)
 - Subpages compact (individual service pages): `min-h-[64vh] md:min-h-[75vh]` — 15% shorter on mobile
 - Contact page hero: `min-h-[65vh] md:min-h-[55vh]` (compact, taller on mobile for nav spacing), solid `bg-brand-900` (no image)
-- Gradient overlays:
-  - Horizontal: `from-black/60 via-black/30 to-transparent`
-  - Vertical: `from-black/60 via-transparent to-black/20`
+- Subpage overlay: `bg-black/60` (consistent across all pages), gradients: horizontal `from-black/40 via-transparent to-transparent`, vertical `from-black/50 via-transparent to-transparent`
+- **Desktop trust badges (subpages)**: Same square badges as home hero, shown when `showBadges` prop is true. Positioned bottom-right within the `max-w-[1400px]` container. Currently enabled on: All Services, individual service pages, Projects.
 - Cinematic overlay (optional `cinematic` prop): adds gold tint + film grain on top of standard gradients
 - Copy: bottom-left, `max-w-xl` or `max-w-2xl`
 - Stats bar below hero: two separate renders — static centered on `sm+`, marquee animation on mobile
@@ -194,7 +199,7 @@ All headings: `letter-spacing: -0.025em`, `text-wrap: balance`
 - Mobile stats bar: `flex sm:hidden`, tripled items with `animate-marquee-mobile` (20s linear infinite, stops at `sm`)
 - Image positioning controlled via `imagePosition` prop (e.g., `"center"`, `"center right"`, `"center top"`)
 - **Mobile CTA layout** (all heroes): Side-by-side row (`flex-row`), "Get a Free Quote" button with compact padding (`px-5`), phone button as icon-only circle (`w-12 h-12 rounded-full`, number hidden via `hidden sm:inline`). Desktop retains full phone number button.
-- All services page hero includes `showBadges` prop for TSSA/Fulton trust badges on mobile
+- All services page hero includes `showBadges` prop for TSSA/Fulton trust badges (desktop square badges + mobile pill badges)
 - **Mobile description truncation**: PageHero supports `mobileDescription` prop — shorter SEO-optimized copy shown on mobile via `sm:hidden`, full description on desktop via `hidden sm:block`
 
 ### Section Wrapper
@@ -237,7 +242,7 @@ Four variants:
 - Image crossfade: `transition-opacity duration-400 ease-in-out`
 - CTA order: "Request a Quote" (primary gold) first, "Learn More" (outlined) second
 - **Mobile service descriptions**: Truncated SEO-optimized copy via `MOBILE_DESCRIPTIONS` map, shown via `sm:hidden` span. Full descriptions on desktop via `hidden sm:inline`.
-- **Desktop quote form**: Image stays in DOM as `invisible` when form shows. Form overlays with `absolute inset-0`. Tab cards and arrows remain visible. Cross-fade transition (`transition-all duration-400`).
+- **Desktop quote form**: Form overlays the image column with `absolute inset-0`. Service content, tab cards, and arrows all remain fully visible (no invisible/hidden on the left column). Cross-fade transition (`transition-all duration-400`).
 - **Mobile quote form**: Left column content fully hides (`hidden lg:flex`). Form renders in normal flow. Section height animates smoothly via JS-driven height transition (3-frame `requestAnimationFrame` sequence: pin old height → measure new → animate with `height 500ms ease-in-out`). Cross-fade transition on form appearance.
 
 ### Services Accordion (Home Page)
@@ -468,7 +473,7 @@ All contact forms include: logo at top, "Get in Touch" label, full name, email/p
 
 Applied to the home page hero via overlay layers:
 
-1. **Dark base**: `bg-black/70`
+1. **Dark base**: `bg-black/60`
 2. **Gold tint**: `bg-amber-900/15 mix-blend-multiply`
 3. **Directional gradients**: standard left-to-right and bottom-to-top for text readability
 4. **Film grain**: SVG `feTurbulence` noise texture, `opacity-[0.08]`, `backgroundSize: 150px`, repeated
@@ -625,8 +630,8 @@ All images (except logos) are **WebP** format for performance. Logos remain PNG.
 - **Stats bars**: Separate mobile/desktop renders. Mobile: marquee animation (`animate-marquee-mobile`, tripled items, no icons). Desktop: static centered with icons. Uses `hidden sm:flex` / `flex sm:hidden`.
 - **CTA buttons**: `flex-col sm:flex-row` (stack on mobile, inline on tablet+), `w-full sm:w-auto` for equal width on mobile, `justify-center` for centered text
 - **CTA hierarchy**: "Get a Quote" is always the primary gold CTA (listed first), phone number is always the secondary outline CTA (listed second) — applies site-wide
-- **Hero H1 (home)**: `text-[2.5rem] sm:text-[2.875rem] md:text-[3.625rem] lg:text-[4.125rem]`
-- **Dark overlays on mobile**: `bg-black/[0.65] md:bg-transparent` on page heroes, `bg-black/50 md:bg-transparent` on project cards and service cards — improves text readability on mobile without affecting desktop
+- **Hero H1 (home)**: `text-[2.5rem] sm:text-[2.875rem] md:text-[3.08rem] lg:text-[3.5rem]`
+- **Dark overlays**: `bg-black/60` on all hero sections (consistent across mobile and desktop). Project cards and service cards use `bg-black/50 md:bg-transparent` for mobile readability.
 - **Hero description**: `text-base sm:text-lg`
 - **Project slider cards**: `w-[85vw] sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]`
 - **Featured project image**: visible on all screens (`min-h-[250px] lg:min-h-[300px]`)
