@@ -4,8 +4,6 @@ import { ArrowRight, Phone, CheckCircle2, ShieldCheck, Clock, Award, Gauge, Star
 import { SITE } from "@/lib/constants";
 
 // Tiny dark blurred placeholder — blends with hero overlay during client-side nav
-const BLUR_PLACEHOLDER = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-
 export interface HeroStat {
   value: string;
   label: string;
@@ -61,8 +59,6 @@ export function PageHero({
               sizes="100vw"
               className="object-cover"
               style={{ objectPosition: imagePosition }}
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
               priority
             />
             <div className="absolute inset-0 bg-black/60" />
