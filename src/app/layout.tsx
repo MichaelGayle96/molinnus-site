@@ -35,6 +35,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <link rel="preload" as="image" href="/hero4.webp" />
+        <link rel="preload" as="image" href="/hero2.webp" />
+        <link rel="preload" as="image" href="/hero3.webp" />
+        <link rel="preload" as="image" href="/hero5.webp" />
+        <link rel="preload" as="image" href="/hero6.webp" />
+        <link rel="preload" as="image" href="/hero7.webp" />
+        <link rel="preload" as="image" href="/hero9.webp" />
+        <link rel="preload" as="image" href="/steam-boiler-hero.webp" />
+      </head>
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Navbar />
         <main className="flex-1">{children}</main>
