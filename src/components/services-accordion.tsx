@@ -112,8 +112,10 @@ export function ServicesAccordion() {
             </div>
 
             {/* Quote form — absolute on desktop, normal flow on mobile */}
-            {showQuoteForm && (
-            <div className="rounded-[10px] bg-white/[0.04] border border-white/10 p-6 sm:p-8 pb-12 md:p-10 md:pb-16 flex flex-col lg:absolute lg:inset-0">
+            <div className={cn(
+              "rounded-[10px] bg-white/[0.04] border border-white/10 p-6 sm:p-8 pb-12 md:p-10 md:pb-16 flex flex-col lg:absolute lg:inset-0 transition-all duration-400",
+              showQuoteForm ? "opacity-100 visible" : "opacity-0 invisible absolute inset-0 pointer-events-none"
+            )}>
 
               <div className="flex items-start justify-between mb-6">
                 <div>
@@ -150,7 +152,7 @@ export function ServicesAccordion() {
                     type="text"
                     placeholder="Full Name"
                     onChange={(e) => trackField("name", e.target.value)}
-                    className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")}
+                    className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")}
                   />
                   <FieldError message={errors.name} />
                 </div>
@@ -162,7 +164,7 @@ export function ServicesAccordion() {
                       type="email"
                       placeholder="Email"
                       onChange={(e) => trackField("email", e.target.value)}
-                      className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")}
+                      className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")}
                     />
                     <FieldError message={errors.email} />
                     </div>
@@ -173,7 +175,7 @@ export function ServicesAccordion() {
                       type="tel"
                       placeholder="Phone"
                       onChange={(e) => trackField("phone", e.target.value)}
-                      className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")}
+                      className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")}
                     />
                     <FieldError message={errors.phone} />
                     </div>
@@ -182,7 +184,7 @@ export function ServicesAccordion() {
                   <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Service Needed</label>
                   <select
                     defaultValue=""
-                    className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none"
+                    className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-base md:text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none"
                   >
                     <option value="" disabled className="text-brand-950">Select a service...</option>
                     {SERVICES.map((s) => (
@@ -215,7 +217,6 @@ export function ServicesAccordion() {
               </form>
               )}
             </div>
-            )}
           </div>
         </div>
       </div>
@@ -244,15 +245,29 @@ function ServiceItem({
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ duration: 0.6, delay: 0.08 + index * 0.07, ease: "easeOut" }}
       onMouseEnter={onHover}
+      onClick={onHover}
       className={cn(
-        "rounded-[10px] border transition-[background-color,border-color] duration-300 cursor-pointer overflow-hidden",
+        "relative rounded-[10px] border transition-[background-color,border-color] duration-300 cursor-pointer overflow-hidden",
         isActive
           ? "bg-white/[0.04] border-white/10"
           : "bg-transparent border-white/[0.06] hover:border-white/10"
       )}
     >
+      {/* Background image peek — visible on mobile when active */}
+      <div className={cn(
+        "absolute inset-0 sm:hidden transition-opacity duration-500",
+        isActive ? "opacity-100" : "opacity-0"
+      )}>
+        <Image
+          src={SERVICE_IMAGES[index]}
+          alt=""
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-brand-900/85" />
+      </div>
       {/* Header row */}
-      <div className="flex items-center px-6 py-5">
+      <div className="relative flex items-center px-6 py-5">
         <h3
           className={cn(
             "text-xl md:text-2xl font-semibold transition-colors",
@@ -272,11 +287,11 @@ function ServiceItem({
             : "grid-rows-[0fr] opacity-0"
         )}
       >
-        <div className="overflow-hidden">
+        <div className="overflow-hidden relative">
           <div className="px-6 pb-5">
             <div className="flex gap-5 items-stretch">
               <div className="flex-1">
-                <p className="text-sm text-white/40 leading-relaxed mb-5">
+                <p className="text-sm text-white/70 sm:text-white/40 leading-relaxed mb-5">
                   {service.description}
                 </p>
                 <Link

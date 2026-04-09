@@ -48,7 +48,7 @@ export function HomeHero() {
     <>
     <section
       ref={sectionRef}
-      className="relative flex flex-col justify-end overflow-hidden transition-all duration-400 min-h-[90vh]"
+      className="relative flex flex-col justify-end overflow-hidden transition-all duration-400 min-h-[70vh] sm:min-h-[90vh]"
       style={contactOpen && panelHeight > 0 ? { minHeight: `${panelHeight + 88 + 24}px` } : undefined}
     >
       <Image
@@ -56,11 +56,11 @@ export function HomeHero() {
         alt="Commercial boiler room installation by Molinnus Plumbing & Heating"
         fill
         className="object-cover"
-        style={{ objectPosition: "75% 100%" }}
+        style={{ objectPosition: "85% 100%" }}
         priority
       />
       {/* Dark base overlay */}
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute inset-0 bg-black/45 sm:bg-black/70" />
       {/* Gold cinematic tint */}
       <div className="absolute inset-0 bg-amber-900/15 mix-blend-multiply" />
       {/* Directional gradients for text readability */}
@@ -77,9 +77,9 @@ export function HomeHero() {
       />
 
       {/* Copy bottom-left */}
-      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-10 md:pb-16">
+      <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10 w-full pb-[45px] md:pb-16">
         <div className="max-w-2xl">
-          <p className="text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase mb-3 sm:mb-4 hidden sm:block">
             TSSA Licensed &middot; Fulton Recommended Installer
           </p>
           <h1 className="text-white text-[2.5rem] sm:text-[2.875rem] md:text-[3.625rem] lg:text-[4.125rem] font-bold leading-[1.08] tracking-tight">
@@ -87,27 +87,38 @@ export function HomeHero() {
             <span className="text-gold-500">Plumbing & Heating</span>{" "}
             Experts
           </h1>
-          <p className="mt-5 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
+          <p className="mt-5 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed hidden sm:block">
             Specializing in hydronic heating, steam boiler systems, and
             commercial plumbing solutions. Family-owned and trusted by
             property managers across Durham, the GTA, and Peterborough for
             over 20 years.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-row flex-wrap items-center gap-3">
             <button
               onClick={() => setContactOpen(true)}
-              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors cursor-pointer w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-5 sm:px-7 py-3.5 rounded-full transition-colors cursor-pointer sm:w-auto"
             >
               Get a Free Quote
               <ArrowRight className="h-4 w-4" />
             </button>
             <a
               href={SITE.phoneTel}
-              className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
+              className="inline-flex items-center justify-center w-12 h-12 sm:w-auto sm:h-auto sm:gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm sm:px-7 sm:py-3.5 rounded-full transition-colors shrink-0"
             >
               <Phone className="h-4 w-4" />
-              {SITE.phone}
+              <span className="hidden sm:inline">{SITE.phone}</span>
             </a>
+          </div>
+          {/* Trust badges — mobile only */}
+          <div className="flex items-center gap-2 sm:hidden mt-5">
+              <div className="h-9 px-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center gap-1.5" title="TSSA Licensed">
+                <ShieldCheck className="h-3.5 w-3.5 text-gold-500" />
+                <span className="text-[0.6rem] font-bold text-white/80 tracking-wide">TSSA</span>
+              </div>
+              <div className="h-9 px-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center gap-1.5" title="Fulton Recommended Installer">
+                <Award className="h-3.5 w-3.5 text-gold-500" />
+                <span className="text-[0.6rem] font-bold text-white/80 tracking-wide">Fulton</span>
+              </div>
           </div>
         </div>
       </div>
@@ -254,6 +265,7 @@ export function HomeHero() {
           onClick={() => setContactOpen(false)}
         />
       )}
+
     </section>
 
     {/* Stats bar below hero */}

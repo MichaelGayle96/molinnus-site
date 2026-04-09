@@ -104,8 +104,10 @@ export function FeaturedProject() {
             </div>
 
             {/* Quote form — absolute on desktop, normal flow on mobile */}
-            {showQuoteForm && (
-            <div className="bg-white/[0.04] border border-white/10 rounded-[12px] p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0">
+            <div className={cn(
+              "bg-white/[0.04] border border-white/10 rounded-[12px] p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0 transition-all duration-400",
+              showQuoteForm ? "opacity-100 visible" : "opacity-0 invisible absolute inset-0 pointer-events-none"
+            )}>
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <Image
@@ -136,24 +138,24 @@ export function FeaturedProject() {
               <form className="space-y-3" onSubmit={validate} noValidate>
                 <div>
                   <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Full Name <span className="text-red-500">*</span></label>
-                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
+                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
                   <FieldError message={errors.name} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Email <span className="text-red-500">*</span></label>
-                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
+                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
                     <FieldError message={errors.email} />
                     </div>
                   <div>
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Phone <span className="text-red-500">*</span></label>
-                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
+                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
                     <FieldError message={errors.phone} />
                     </div>
                 </div>
                 <div className="relative">
                   <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Service Needed</label>
-                  <select defaultValue="" className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
+                  <select defaultValue="" className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-base md:text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
                     <option value="" disabled className="text-brand-950">Select a service...</option>
                     {SERVICES.map((s) => (<option key={s.slug} value={s.slug} className="text-brand-950">{s.title}</option>))}
                   </select>
@@ -173,7 +175,6 @@ export function FeaturedProject() {
               </form>
               )}
             </div>
-            )}
           </div>
         </div>
       </div>

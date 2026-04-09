@@ -33,6 +33,14 @@ const ICON_MAP = {
   MessageSquare,
 } as const;
 
+const MOBILE_DESCRIPTIONS: Record<string, string> = {
+  "commercial-plumbing": "Licensed commercial plumbing for high-rises and institutional properties across Ontario.",
+  "hydronic-heating": "Hydronic heating design, installation, and servicing for commercial buildings.",
+  "steam-boilers": "TSSA-approved steam boiler installations. Fulton recommended installer.",
+  "backflow-testing": "Certified backflow testing and cross-connection control for compliance.",
+  consultation: "Expert consultation on commercial plumbing and heating projects.",
+};
+
 const SERVICE_IMAGES = [
   "/p12.webp",
   "/p10.webp",
@@ -49,18 +57,121 @@ export function ServicesPageContent() {
   const [glowActive, setGlowActive] = useState(false);
   const glowTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [autoAdvance, setAutoAdvance] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const autoAdvanceInterval = 5000; // 5 seconds per service
+
   const switchTab = useCallback((i: number) => {
     setActiveTab(i);
     setShowQuoteForm(false);
     setGlowActive(true);
+    setAutoAdvance(false); // stop auto-advance on user interaction
+    setProgress(0);
     if (glowTimeoutRef.current) clearTimeout(glowTimeoutRef.current);
     glowTimeoutRef.current = setTimeout(() => setGlowActive(false), 500);
   }, []);
+
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Animate mobile section height on form toggle
+  const mobileWrapRef = useRef<HTMLDivElement>(null);
+  const prevHeightRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (isDesktop || !mobileWrapRef.current) return;
+    const el = mobileWrapRef.current;
+
+    // Capture current height before DOM changes
+    if (prevHeightRef.current === null) {
+      prevHeightRef.current = el.scrollHeight;
+      el.style.height = `${el.scrollHeight}px`;
+      return;
+    }
+
+    const fromHeight = prevHeightRef.current;
+
+    // Let DOM settle with new content, then measure target
+    const raf1 = requestAnimationFrame(() => {
+      // Disable transition, pin to old height
+      el.style.transition = "none";
+      el.style.height = `${fromHeight}px`;
+
+      const raf2 = requestAnimationFrame(() => {
+        // Measure target height
+        el.style.height = "auto";
+        const toHeight = el.scrollHeight;
+        el.style.height = `${fromHeight}px`;
+
+        // Another frame to ensure the pinned height is painted
+        const raf3 = requestAnimationFrame(() => {
+          el.style.transition = "height 500ms ease-in-out";
+          el.style.height = `${toHeight}px`;
+          prevHeightRef.current = toHeight;
+
+          const onEnd = () => {
+            el.style.height = "auto";
+            el.removeEventListener("transitionend", onEnd);
+          };
+          el.addEventListener("transitionend", onEnd, { once: true });
+        });
+
+        return () => cancelAnimationFrame(raf3);
+      });
+
+      return () => cancelAnimationFrame(raf2);
+    });
+
+    return () => cancelAnimationFrame(raf1);
+  }, [showQuoteForm, isDesktop]);
+
+  // Swipe handling for mobile — passive listeners to not block scrolling
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const touchEndX = useRef(0);
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el || isDesktop) return;
+    const onStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      touchStartY.current = e.touches[0].clientY;
+      touchEndX.current = e.touches[0].clientX;
+    };
+    const onMove = (e: TouchEvent) => {
+      touchEndX.current = e.touches[0].clientX;
+    };
+    const onEnd = () => {
+      const diffX = touchStartX.current - touchEndX.current;
+      if (Math.abs(diffX) < 50) return;
+      if (diffX > 0) {
+        setActiveTab((prev) => (prev === SERVICES.length - 1 ? 0 : prev + 1));
+      } else {
+        setActiveTab((prev) => (prev === 0 ? SERVICES.length - 1 : prev - 1));
+      }
+      setShowQuoteForm(false);
+      setAutoAdvance(false);
+      setProgress(0);
+      setGlowActive(true);
+      if (glowTimeoutRef.current) clearTimeout(glowTimeoutRef.current);
+      glowTimeoutRef.current = setTimeout(() => setGlowActive(false), 500);
+    };
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: true });
+    el.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+    };
+  }, [isDesktop]);
 
   const measureHeight = useCallback(() => {
-    if (!contentRef.current) return;
+    const desktop = window.innerWidth >= 1024;
+    setIsDesktop(desktop);
+    if (!contentRef.current || !desktop) {
+      setContentHeight(0);
+      return;
+    }
     const panels = contentRef.current.children;
     let maxH = 0;
     for (let i = 0; i < panels.length; i++) {
@@ -103,14 +214,32 @@ export function ServicesPageContent() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  // Auto-advance on mobile — CSS transition handles the fill, JS just triggers advances
+  const [fillActive, setFillActive] = useState(false);
+  useEffect(() => {
+    if (!autoAdvance || isDesktop || showQuoteForm) return;
+    // Kick off fill after a brief frame to ensure transition triggers
+    const raf = requestAnimationFrame(() => setFillActive(true));
+    const id = setTimeout(() => {
+      setFillActive(false);
+      setActiveTab((t) => (t === SERVICES.length - 1 ? 0 : t + 1));
+    }, autoAdvanceInterval);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(id);
+    };
+  }, [autoAdvance, isDesktop, showQuoteForm, activeTab]);
+
   return (
     <>
       <PageHero
         label="Our Services"
         title="Commercial Plumbing & Heating Solutions"
         description="End-to-end mechanical services for high-rise, commercial, and institutional properties. Every project backed by 20+ years of expertise and a spotless safety record."
+        mobileDescription="TSSA-licensed plumbing, heating &amp; boiler services for commercial properties across Ontario."
         image="/hero7.webp"
         imagePosition="center"
+        showBadges
         stats={[
           { value: "5", label: "Core Services" },
           { value: "20+", label: "Years Experience" },
@@ -140,41 +269,48 @@ export function ServicesPageContent() {
       </section>
 
       {/* ─── Services — Tabbed section ────────────────────── */}
-      <section className="bg-brand-900 py-16 md:py-20">
+      <section className="bg-brand-900 pt-16 pb-0 md:py-20 relative">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
+          <div
+            ref={mobileWrapRef}
+            className="relative overflow-hidden lg:!h-auto"
+          >
           <div className="relative grid lg:grid-cols-[1.15fr_1fr] gap-8 items-stretch">
             {/* Left — Active content + tab list below (hidden on mobile when form shows) */}
-            <div className={cn("flex flex-col justify-between", showQuoteForm && "invisible lg:visible")}>
+            <div className={cn("flex flex-col justify-between", showQuoteForm && "hidden lg:flex lg:invisible")}>
               {/* Active service content — hidden on desktop when form shows */}
               <div
                 ref={contentRef}
                 className={cn("relative overflow-hidden", showQuoteForm && "lg:invisible")}
-                style={{ height: contentHeight > 0 ? contentHeight : "auto" }}
+                style={isDesktop && contentHeight > 0 ? { height: contentHeight } : undefined}
               >
                 {SERVICES.map((service, i) => {
                   const Icon = ICON_MAP[service.icon];
+                  const isActive = activeTab === i;
                   return (
                     <div
                       key={service.slug}
                       className={cn(
-                        "transition-all duration-300 absolute inset-0",
-                        activeTab === i
-                          ? "opacity-100 visible"
-                          : "opacity-0 invisible"
+                        "transition-all duration-300",
+                        "lg:absolute lg:inset-0",
+                        isActive
+                          ? "relative opacity-100 visible"
+                          : "hidden lg:block lg:opacity-0 lg:invisible"
                       )}
                     >
-                      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gold-500 mb-3 block">
+                      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gold-500 mb-3 block text-center lg:text-left">
                         Our Services
                       </span>
-                      <h2 className="text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-[1.1] tracking-tight mb-5">
+                      <h2 className="text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-[1.1] tracking-tight mb-5 text-center lg:text-left">
                         {service.title}
                       </h2>
 
-                      <p className="text-base text-white/50 leading-relaxed mb-7 max-w-lg">
-                        {service.description}
+                      <p className="text-base text-white/50 leading-relaxed mb-7 max-w-lg text-center lg:text-left mx-auto lg:mx-0">
+                        <span className="hidden sm:inline">{service.description}</span>
+                        <span className="sm:hidden">{MOBILE_DESCRIPTIONS[service.slug] || service.description}</span>
                       </p>
 
-                      <ul className="space-y-2.5 mb-8">
+                      <ul className="space-y-2.5 mb-8 flex flex-col items-center lg:items-start">
                         {service.features.map((f) => (
                           <li
                             key={f}
@@ -186,7 +322,7 @@ export function ServicesPageContent() {
                         ))}
                       </ul>
 
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                         <button
                           onClick={() => { setShowQuoteForm(true); setGlowActive(true); if (glowTimeoutRef.current) clearTimeout(glowTimeoutRef.current); glowTimeoutRef.current = setTimeout(() => setGlowActive(false), 500); }}
                           className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors cursor-pointer"
@@ -207,16 +343,54 @@ export function ServicesPageContent() {
               </div>
 
               {/* Tab list — compact inline with arrows below */}
-              <div className="mt-6 pt-6">
-                <div className="w-[70%] border-t border-white/10 mb-6"></div>
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-4 pt-4 lg:mt-6 lg:pt-6">
+                <div className="w-[70%] border-t border-white/10 mb-6 mx-auto lg:mx-0"></div>
+
+                {/* Mobile: service cards + dot indicators + swipe hint */}
+                <div className="lg:hidden flex flex-col flex-1">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {SERVICES.map((service, i) => {
+                      const Icon = ICON_MAP[service.icon];
+                      const isActive = activeTab === i;
+                      return (
+                        <button
+                          key={service.slug}
+                          id={service.slug}
+                          onClick={() => switchTab(i)}
+                          className={cn(
+                            "scroll-mt-24 text-left px-2.5 py-1.5 rounded-[8px] transition-all duration-300 cursor-pointer border whitespace-nowrap",
+                            isActive
+                              ? "bg-white/[0.06] border-white/10"
+                              : "bg-transparent border-transparent hover:bg-white/[0.03] hover:border-white/[0.06]"
+                          )}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <Icon className={cn(
+                              "h-3.5 w-3.5 shrink-0 transition-colors duration-300",
+                              isActive ? "text-gold-500" : "text-white/30"
+                            )} />
+                            <span className={cn(
+                              "text-sm font-medium transition-colors duration-300",
+                              isActive ? "text-white" : "text-white/40"
+                            )}>
+                              {service.shortTitle}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Desktop: tab buttons */}
+                <div className="hidden lg:flex flex-wrap gap-2">
                   {SERVICES.map((service, i) => {
                     const Icon = ICON_MAP[service.icon];
                     const isActive = activeTab === i;
                     return (
                       <button
                         key={service.slug}
-                        id={service.slug}
+                        id={`dt-${service.slug}`}
                         onClick={() => switchTab(i)}
                         className={cn(
                           "scroll-mt-24 text-left px-2.5 py-1.5 rounded-[8px] transition-all duration-300 cursor-pointer border whitespace-nowrap",
@@ -241,7 +415,8 @@ export function ServicesPageContent() {
                     );
                   })}
                 </div>
-                <div className="flex items-center gap-2 mt-[39px]">
+                {/* Desktop: arrow navigation */}
+                <div className="hidden lg:flex items-center gap-2 mt-[39px]">
                   <button
                     onClick={() => switchTab(activeTab === 0 ? SERVICES.length - 1 : activeTab - 1)}
                     className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-500 hover:bg-white/[0.06] transition-all cursor-pointer"
@@ -260,9 +435,11 @@ export function ServicesPageContent() {
               </div>
             </div>
 
-            {/* Mobile quote form — overlays the invisible content */}
-            {showQuoteForm && (
-            <div className="absolute inset-0 z-10 lg:hidden rounded-[10px] bg-brand-900 border border-white/10 p-6 sm:p-8 flex flex-col">
+            {/* Mobile quote form — replaces content on mobile */}
+            <div className={cn(
+              "lg:hidden rounded-[10px] bg-brand-900 border border-white/10 p-6 sm:p-8 flex flex-col transition-all duration-400",
+              showQuoteForm ? "opacity-100 visible" : "opacity-0 invisible absolute inset-0 pointer-events-none"
+            )}>
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <Image
@@ -293,24 +470,24 @@ export function ServicesPageContent() {
               <form className="space-y-3" onSubmit={validate} noValidate>
                 <div>
                   <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Full Name <span className="text-red-500">*</span></label>
-                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
+                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
                   <FieldError message={errors.name} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Email <span className="text-red-500">*</span></label>
-                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
+                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
                     <FieldError message={errors.email} />
                   </div>
                   <div>
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Phone <span className="text-red-500">*</span></label>
-                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
+                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
                     <FieldError message={errors.phone} />
                   </div>
                 </div>
                 <div className="relative">
                   <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Service Needed</label>
-                  <select defaultValue={SERVICES[activeTab].slug} className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
+                  <select defaultValue={SERVICES[activeTab].slug} className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-base md:text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
                     {SERVICES.map((s) => (<option key={s.slug} value={s.slug} className="text-brand-950">{s.title}</option>))}
                   </select>
                   <ChevronDown className="absolute right-4 bottom-3 h-4 w-4 text-white/40 pointer-events-none" />
@@ -329,7 +506,6 @@ export function ServicesPageContent() {
               </form>
               )}
             </div>
-            )}
 
             {/* Right — Image / Quote form (desktop only) */}
             <div className="relative hidden lg:block rounded-[12px]">
@@ -352,9 +528,11 @@ export function ServicesPageContent() {
               ))}
               </div>
 
-              {/* Quote form — absolute on desktop, normal flow on mobile */}
-              {showQuoteForm && (
-              <div className="rounded-[10px] bg-white/[0.04] border border-white/10 p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0">
+              {/* Quote form — absolute on desktop */}
+              <div className={cn(
+                "rounded-[10px] bg-white/[0.04] border border-white/10 p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0 transition-all duration-400",
+                showQuoteForm ? "opacity-100 visible" : "opacity-0 invisible absolute inset-0 pointer-events-none"
+              )}>
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <Image
@@ -385,24 +563,24 @@ export function ServicesPageContent() {
                 <form className="space-y-3" onSubmit={validate} noValidate>
                   <div>
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Full Name <span className="text-red-500">*</span></label>
-                    <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
+                    <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-white/10")} />
                     <FieldError message={errors.name} />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Email <span className="text-red-500">*</span></label>
-                      <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
+                      <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-white/10")} />
                       <FieldError message={errors.email} />
                       </div>
                     <div>
                       <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Phone <span className="text-red-500">*</span></label>
-                      <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
+                      <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-white/5 px-3 text-base md:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-white/10")} />
                       <FieldError message={errors.phone} />
                       </div>
                   </div>
                   <div className="relative">
                     <label className="block text-[0.65rem] font-medium text-white/50 mb-1">Service Needed</label>
-                    <select defaultValue={SERVICES[activeTab].slug} className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
+                    <select defaultValue={SERVICES[activeTab].slug} className="w-full h-10 rounded-[8px] border border-white/10 bg-white/5 px-4 pr-12 text-base md:text-sm text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
                       {SERVICES.map((s) => (<option key={s.slug} value={s.slug} className="text-brand-950">{s.title}</option>))}
                     </select>
                     <ChevronDown className="absolute right-4 bottom-3 h-4 w-4 text-white/40 pointer-events-none" />
@@ -421,10 +599,37 @@ export function ServicesPageContent() {
                 </form>
                 )}
               </div>
-              )}
             </div>
             </div>
           </div>
+          </div>
+        </div>
+        {/* Mobile: progress bar pills — anchored to section bottom */}
+        <div className={cn("flex items-center w-full pb-5 px-1.5 gap-1.5 pt-10 lg:hidden transition-opacity duration-300", showQuoteForm ? "opacity-0 pointer-events-none" : "opacity-100")}>
+          {SERVICES.map((service, i) => (
+            <button
+              key={service.slug}
+              onClick={() => switchTab(i)}
+              className={cn(
+                "relative h-[2px] rounded-full cursor-pointer overflow-hidden",
+                activeTab === i ? "flex-[2]" : "flex-1",
+                "bg-white/15 transition-[flex] duration-300"
+              )}
+              aria-label={service.shortTitle}
+            >
+              {activeTab === i && autoAdvance ? (
+                <span
+                  className="absolute inset-y-0 left-0 bg-gold-500 rounded-full"
+                  style={{
+                    width: fillActive ? "100%" : "0%",
+                    transition: fillActive ? `width ${autoAdvanceInterval}ms linear` : "none",
+                  }}
+                />
+              ) : activeTab === i ? (
+                <span className="absolute inset-0 bg-gold-500 rounded-full" />
+              ) : null}
+            </button>
+          ))}
         </div>
       </section>
 
@@ -559,38 +764,6 @@ export function ServicesPageContent() {
       {/* ─── Testimonials ────────────────────────────────── */}
       <TestimonialsSection />
 
-      {/* ─── Bottom CTA ──────────────────────────────────── */}
-      <section className="bg-brand-900 text-white border-b border-white/10">
-        <div className="mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-500 mb-3 block">
-            Expert Guidance
-          </span>
-          <h2 className="text-white max-w-2xl mx-auto">
-            Not Sure What You Need?
-          </h2>
-          <p className="mt-4 text-white/50 text-lg leading-relaxed max-w-lg mx-auto">
-            Our paid consultation service gives you honest, expert guidance
-            before you commit. We&rsquo;ll assess your system, identify issues,
-            and recommend the right solution.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
-            >
-              Get a Quote
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-            <a
-              href={SITE.phoneTel}
-              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
-            >
-              <Phone className="h-4 w-4" />
-              {SITE.phone}
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

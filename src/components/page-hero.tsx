@@ -12,12 +12,14 @@ interface PageHeroProps {
   label?: string;
   title: string;
   description?: string;
+  mobileDescription?: string;
   image?: string;
   imagePosition?: string;
   cinematic?: boolean;
   compact?: boolean;
   stats?: HeroStat[];
   showCtas?: boolean;
+  showBadges?: boolean;
   fullHeight?: boolean;
   ctaHref?: string;
 }
@@ -28,12 +30,14 @@ export function PageHero({
   label,
   title,
   description,
+  mobileDescription,
   image,
   imagePosition = "top",
   cinematic = false,
   compact = false,
   stats,
   showCtas = true,
+  showBadges = false,
   fullHeight = false,
   ctaHref = "/contact",
 }: PageHeroProps) {
@@ -41,7 +45,7 @@ export function PageHero({
     <>
       <section
         className={`relative flex flex-col justify-end overflow-hidden ${
-          fullHeight ? "min-h-screen" : compact ? "min-h-[65vh] md:min-h-[55vh]" : "min-h-[75vh]"
+          fullHeight ? "min-h-screen" : compact ? "min-h-[64vh] md:min-h-[75vh]" : "min-h-[75vh]"
         }`}
       >
         {/* Background image — full bleed */}
@@ -89,27 +93,52 @@ export function PageHero({
               {title}
             </h1>
             {description && (
-              <p className="mt-4 text-base text-white/60 leading-relaxed max-w-lg">
-                {description}
-              </p>
+              mobileDescription ? (
+                <>
+                  <p className="mt-4 text-base text-white/60 leading-relaxed max-w-lg hidden sm:block">
+                    {description}
+                  </p>
+                  <p className="mt-4 text-base text-white/60 leading-relaxed max-w-lg sm:hidden">
+                    {mobileDescription}
+                  </p>
+                </>
+              ) : (
+                <p className="mt-4 text-base text-white/60 leading-relaxed max-w-lg">
+                  {description}
+                </p>
+              )
             )}
             {showCtas && (
-              <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
-                <Link
-                  href={ctaHref}
-                  className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
-                >
-                  Get a Free Quote
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <a
-                  href={SITE.phoneTel}
-                  className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
-                >
-                  <Phone className="h-4 w-4" />
-                  {SITE.phone}
-                </a>
-              </div>
+              <>
+                <div className="mt-6 flex flex-row flex-wrap items-center gap-3">
+                  <Link
+                    href={ctaHref}
+                    className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-5 sm:px-6 py-3 rounded-full transition-colors sm:w-auto"
+                  >
+                    Get a Free Quote
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <a
+                    href={SITE.phoneTel}
+                    className="inline-flex items-center justify-center w-12 h-12 sm:w-auto sm:h-auto sm:gap-2 border border-white/25 text-white hover:bg-white/10 font-medium text-sm sm:px-6 sm:py-3 rounded-full transition-colors shrink-0"
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span className="hidden sm:inline">{SITE.phone}</span>
+                  </a>
+                </div>
+                {showBadges && (
+                  <div className="flex items-center gap-2 sm:hidden mt-5">
+                    <div className="h-9 px-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center gap-1.5" title="TSSA Licensed">
+                      <ShieldCheck className="h-3.5 w-3.5 text-gold-500" />
+                      <span className="text-[0.6rem] font-bold text-white/80 tracking-wide">TSSA</span>
+                    </div>
+                    <div className="h-9 px-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center gap-1.5" title="Fulton Recommended Installer">
+                      <Award className="h-3.5 w-3.5 text-gold-500" />
+                      <span className="text-[0.6rem] font-bold text-white/80 tracking-wide">Fulton</span>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

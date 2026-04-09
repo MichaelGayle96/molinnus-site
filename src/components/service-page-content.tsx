@@ -194,6 +194,10 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
     consultation: "/hero5.webp",
   };
   const heroImage = heroImages[slug] || "/plumbing-hero.webp";
+  const heroPositions: Record<string, string> = {
+    "hydronic-heating": "100% center",
+  };
+  const heroPosition = heroPositions[slug] || "center";
   const serviceImages: Record<string, string> = {
     "commercial-plumbing": "/p11.webp",
     "hydronic-heating": "/p10.webp",
@@ -214,7 +218,8 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
         title={service.title}
         description={service.description}
         image={heroImage}
-        imagePosition="center"
+        imagePosition={heroPosition}
+        compact
         stats={highlights.map((h) => ({ value: h.value, label: h.title }))}
       />
 
@@ -279,8 +284,10 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
             </div>
 
             {/* Quote form — absolutely positioned over features */}
-            {showQuoteForm && (
-            <div className="rounded-[10px] bg-white border border-brand-200 p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0">
+            <div className={cn(
+              "rounded-[10px] bg-white border border-brand-200 p-6 sm:p-8 md:p-10 flex flex-col lg:absolute lg:inset-0 transition-all duration-400",
+              showQuoteForm ? "opacity-100 visible" : "opacity-0 invisible absolute inset-0 pointer-events-none"
+            )}>
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <Image
@@ -308,24 +315,24 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
               <form className="space-y-3" onSubmit={validate} noValidate>
                 <div>
                   <label className="block text-[0.65rem] font-medium text-brand-500 mb-1">Full Name <span className="text-red-500">*</span></label>
-                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-brand-200")} />
+                  <input name="name" type="text" placeholder="Full Name" onChange={(e) => trackField("name", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-base md:text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.name ? "border-red-500" : "border-brand-200")} />
                   <FieldError message={errors.name} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[0.65rem] font-medium text-brand-500 mb-1">Email <span className="text-red-500">*</span></label>
-                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-brand-200")} />
+                    <input name="email" type="email" placeholder="Email" onChange={(e) => trackField("email", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-base md:text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.email ? "border-red-500" : "border-brand-200")} />
                     <FieldError message={errors.email} />
                     </div>
                   <div>
                     <label className="block text-[0.65rem] font-medium text-brand-500 mb-1">Phone <span className="text-red-500">*</span></label>
-                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-brand-200")} />
+                    <input name="phone" type="tel" placeholder="Phone" onChange={(e) => trackField("phone", e.target.value)} className={cn("w-full h-10 rounded-[8px] border bg-brand-50 px-4 text-base md:text-sm text-brand-900 placeholder:text-brand-400 focus:outline-none focus:border-gold-500 transition-colors", errors.phone ? "border-red-500" : "border-brand-200")} />
                     <FieldError message={errors.phone} />
                     </div>
                 </div>
                 <div className="relative">
                   <label className="block text-[0.65rem] font-medium text-brand-500 mb-1">Service Needed</label>
-                  <select defaultValue={slug} className="w-full h-10 rounded-[8px] border border-brand-200 bg-brand-50 px-4 pr-12 text-sm text-brand-900 focus:outline-none focus:border-gold-500 transition-colors appearance-none">
+                  <select defaultValue={slug} className="w-full h-10 rounded-[8px] border border-brand-200 bg-brand-50 px-4 pr-12 text-base md:text-sm text-brand-900 focus:outline-none focus:border-gold-500 transition-colors appearance-none">
                     {SERVICES.map((s) => (<option key={s.slug} value={s.slug}>{s.title}</option>))}
                   </select>
                   <ChevronDown className="absolute right-4 bottom-3 h-4 w-4 text-brand-400 pointer-events-none" />
@@ -344,7 +351,6 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
               </form>
               )}
             </div>
-            )}
           </div>
         </div>
       </Section>
@@ -486,34 +492,6 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
         </div>
       </Section>
 
-      {/* ─── CTA ──────────────────────────────────────────── */}
-      <section className="bg-brand-900 text-white border-b border-white/10">
-        <div className="mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center">
-          <h2 className="text-white max-w-2xl mx-auto">
-            Ready to Get Started?
-          </h2>
-          <p className="mt-4 text-white/50 text-lg leading-relaxed max-w-lg mx-auto">
-            Get in touch for a free quote on your {service.shortTitle.toLowerCase()} project
-            or schedule a consultation with our experts.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-brand-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
-            >
-              Get a Quote
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-            <a
-              href={SITE.phoneTel}
-              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium text-sm px-7 py-3.5 rounded-full transition-colors w-full sm:w-auto"
-            >
-              <Phone className="h-4 w-4" />
-              {SITE.phone}
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   );
 }
