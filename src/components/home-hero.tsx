@@ -6,6 +6,8 @@ import { Phone, ArrowRight, ArrowUpRight, X, Mail, MapPin, Clock, ShieldCheck, A
 import { useEffect, useRef, useState } from "react";
 import { SITE, IMAGES, SERVICES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+
+const BLUR_PLACEHOLDER = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 import { useFormValidation } from "@/lib/use-form-validation";
 import { FieldError } from "@/components/field-error";
 import { FormSuccess } from "@/components/form-success";
@@ -55,8 +57,11 @@ export function HomeHero() {
         src="/hero4.webp"
         alt="Commercial boiler room installation by Molinnus Plumbing & Heating"
         fill
+        sizes="100vw"
         className="object-cover"
         style={{ objectPosition: "85% 100%" }}
+        placeholder="blur"
+        blurDataURL={BLUR_PLACEHOLDER}
         priority
       />
       {/* Dark base overlay */}
