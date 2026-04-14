@@ -121,13 +121,13 @@ export function Footer() {
                   {SITE.phone}
                 </a>
               </li>
-              <li>
+              <li className="card-text-container">
                 <a
                   href={`mailto:${SITE.email}`}
-                  className="flex items-start gap-3 text-sm text-white/40 hover:text-gold-500 transition-colors"
+                  className="flex items-start gap-3 text-white/40 hover:text-gold-500 transition-colors text-auto-fit"
                 >
                   <Mail className="h-4 w-4 mt-0.5 shrink-0 text-gold-500/60" />
-                  {SITE.email}
+                  <span className="min-w-0">{SITE.email}</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-white/40">

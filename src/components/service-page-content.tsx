@@ -258,9 +258,9 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
                 {service.features.map((f) => {
                   const FeatureIcon = FEATURE_ICONS[f] || CheckCircle2;
                   return (
-                    <li key={f} className="flex items-start gap-3 p-3 rounded-[10px] bg-brand-50 border border-brand-200">
+                    <li key={f} className="flex items-start gap-3 p-3 rounded-[10px] bg-brand-50 border border-brand-200 card-text-container">
                       <FeatureIcon className="h-4.5 w-4.5 text-gold-500 mt-0.5 shrink-0" />
-                      <span className="text-brand-800 font-medium text-sm">{f}</span>
+                      <span className="text-brand-800 font-medium text-auto-fit min-w-0">{f}</span>
                     </li>
                   );
                 })}
@@ -380,11 +380,11 @@ export function ServicePageContent({ slug }: ServicePageContentProps) {
                   { text: "Fulton recommended boiler installer", icon: Award },
                   { text: "24/7 emergency service available", icon: Clock },
                 ].map((item) => (
-                  <div key={item.text} className="flex items-center gap-4 p-3.5 rounded-[10px] bg-white/[0.04] border border-white/[0.06]">
+                  <div key={item.text} className="flex items-center gap-4 p-3.5 rounded-[10px] bg-white/[0.04] border border-white/[0.06] card-text-container">
                     <div className="rounded-[8px] bg-gold-500/10 w-8 h-8 flex items-center justify-center shrink-0">
                       <item.icon className="h-4 w-4 text-gold-500" />
                     </div>
-                    <span className="text-white text-sm">{item.text}</span>
+                    <span className="text-white text-auto-fit min-w-0">{item.text}</span>
                   </div>
                 ))}
               </div>

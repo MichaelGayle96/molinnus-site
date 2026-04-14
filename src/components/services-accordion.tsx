@@ -77,10 +77,10 @@ export function ServicesAccordion() {
             {/* Team callout — bottom left */}
             <div className="mt-12 lg:mt-0">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0">
                   <span className="text-lg font-bold text-gold-500">20+</span>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <span className="text-sm font-semibold text-white block">
                     Years of Expertise
                   </span>

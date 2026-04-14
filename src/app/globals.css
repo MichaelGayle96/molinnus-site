@@ -186,4 +186,20 @@
   }
 }
 
+/* ── Card auto-fit text ─────────────────────────────────────
+   Any card/container with .card-text-container becomes a CSS
+   inline-size container.  Children marked .text-auto-fit will
+   scale their font-size down (never up) when the container is
+   narrow, keeping text within the card's padding boundaries.
+   ──────────────────────────────────────────────────────────── */
+.card-text-container {
+  container-type: inline-size;
+}
+
+.text-auto-fit {
+  font-size: clamp(0.6875rem, 4cqi, 0.875rem);  /* 11px → 14px */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 

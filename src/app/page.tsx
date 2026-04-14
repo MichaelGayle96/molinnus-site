@@ -71,7 +71,7 @@ export default function HomePage() {
                   <div className="shrink-0 w-10 h-10 rounded-full bg-brand-900 flex items-center justify-center">
                     <ShieldCheck className="h-4.5 w-4.5 text-gold-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold text-brand-900 text-[0.95rem]">
                       100% TSSA Approval Rate
                     </h4>
@@ -85,7 +85,7 @@ export default function HomePage() {
                   <div className="shrink-0 w-10 h-10 rounded-full bg-brand-900 flex items-center justify-center">
                     <Award className="h-4.5 w-4.5 text-gold-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold text-brand-900 text-[0.95rem]">
                       Fulton Recommended Installer
                     </h4>
@@ -99,7 +99,7 @@ export default function HomePage() {
                   <div className="shrink-0 w-10 h-10 rounded-full bg-brand-900 flex items-center justify-center">
                     <Building2 className="h-4.5 w-4.5 text-gold-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold text-brand-900 text-[0.95rem]">
                       500+ Commercial Projects Completed
                     </h4>

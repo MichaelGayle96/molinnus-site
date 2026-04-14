@@ -94,11 +94,11 @@ export default function ContactPage() {
                   <div className="rounded-full bg-brand-900 w-11 h-11 flex items-center justify-center shrink-0">
                     <item.icon className="h-4.5 w-4.5 text-gold-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-xs font-semibold text-brand-400 uppercase tracking-wider">
                       {item.label}
                     </div>
-                    <div className="mt-1 font-semibold text-brand-900 text-sm">
+                    <div className="mt-1 font-semibold text-brand-900 text-auto-fit">
                       {item.value}
                     </div>
                     <div className="text-xs text-brand-400 mt-0.5">
@@ -112,14 +112,14 @@ export default function ContactPage() {
                 <a
                   key={item.label}
                   href={item.href}
-                  className="block rounded-2xl border border-brand-200 bg-white p-5 hover:border-gold-400 transition-colors"
+                  className="block rounded-2xl border border-brand-200 bg-white p-5 hover:border-gold-400 transition-colors card-text-container"
                 >
                   {inner}
                 </a>
               ) : (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-brand-200 bg-white p-5"
+                  className="rounded-2xl border border-brand-200 bg-white p-5 card-text-container"
                 >
                   {inner}
                 </div>

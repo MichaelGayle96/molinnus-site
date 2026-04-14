@@ -228,10 +228,10 @@ export default function AboutPage() {
               return (
                 <div
                   key={cert}
-                  className="flex items-center gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:bg-white/10 transition-colors card-text-container"
                 >
                   <Icon className="h-5 w-5 text-gold-500 shrink-0" />
-                  <span className="text-white font-medium text-sm">{cert}</span>
+                  <span className="text-white font-medium text-auto-fit min-w-0">{cert}</span>
                 </div>
               );
             })}
